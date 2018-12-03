@@ -61,7 +61,7 @@ sched.minibatch_base = 4
 sched.minibatch_dict = {4: 128, 8: 128, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8, 512: 4}
 sched.G_lrate_dict = {1024: 0.0015}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
-train.total_kimg = 2000
+train.total_kimg = 12000
 
 # Numerical precision (choose one).
 desc += '-fp32'; sched.max_minibatch_per_gpu = {256: 16, 512: 8, 1024: 4}
