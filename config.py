@@ -18,8 +18,8 @@ class EasyDict(dict):
 #----------------------------------------------------------------------------
 # Paths.
 
-data_dir = 'datasets'
-result_dir = 'results'
+data_dir = 'tfrecords'
+result_dir = 'pggan_results'
 
 #----------------------------------------------------------------------------
 # TensorFlow options.
@@ -29,7 +29,7 @@ env = EasyDict()        # Environment variables, set by the main program in trai
 
 tf_config['graph_options.place_pruned_graph']   = True      # False (default) = Check that all ops are available on the designated device. True = Skip the check for ops that are not used.
 #tf_config['gpu_options.allow_growth']          = False     # False (default) = Allocate all GPU memory at the beginning. True = Allocate only as much GPU memory as needed.
-#env.CUDA_VISIBLE_DEVICES                       = '0'       # Unspecified (default) = Use all available GPUs. List of ints = CUDA device numbers to use.
+env.CUDA_VISIBLE_DEVICES                       = '2,3'       # Unspecified (default) = Use all available GPUs. List of ints = CUDA device numbers to use.
 env.TF_CPP_MIN_LOG_LEVEL                        = '1'       # 0 (default) = Print all available debug info from TensorFlow. 1 = Print warnings and errors, but disable debug info.
 
 #----------------------------------------------------------------------------
@@ -50,18 +50,25 @@ sched       = EasyDict()                                    # Options for train.
 grid        = EasyDict(size='1080p', layout='random')       # Options for train.setup_snapshot_image_grid().
 
 # Dataset (choose one).
-desc += '-aaof'
-dataset = EasyDict(tfrecord_dir='aaof')
+desc += '-isbi_512'
+dataset = EasyDict(tfrecord_dir='isbi_512')
 train.mirror_augment = False
 
 # Config presets (choose one).
-desc += '-preset-v2-1gpu'
-num_gpus = 1
-sched.minibatch_base = 4
-sched.minibatch_dict = {4: 128, 8: 128, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8, 512: 4}
-sched.G_lrate_dict = {1024: 0.0015}
+desc += '-preset-v2-2gpus'
+num_gpus = 2
+sched.minibatch_base = 8
+sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8}
+sched.G_lrate_dict = {512: 0.0015, 1024: 0.002}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
 train.total_kimg = 12000
 
-# Numerical precision (choose one).
-desc += '-fp32'; sched.max_minibatch_per_gpu = {256: 16, 512: 8, 1024: 4}
+
+# Numerical precision for faster training
+desc += '-fp16'
+G.dtype = 'float16'
+D.dtype = 'float16'
+G.pixelnorm_epsilon=1e-4
+G_opt.use_loss_scaling = True
+D_opt.use_loss_scaling = True
+sched.max_minibatch_per_gpu = {512: 16, 1024: 8}
