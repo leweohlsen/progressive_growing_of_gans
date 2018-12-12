@@ -61,8 +61,10 @@ sched.minibatch_base = 8
 sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8}
 sched.G_lrate_dict = {512: 0.0015, 1024: 0.002}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
-train.total_kimg = 12000
 
+# training parameters
+train.total_kimg = 12000
+train.resume_run_id = result_dir + '/001-pgan-isbi_512-preset-v2-2gpus-fp16'
 
 # Numerical precision for faster training
 desc += '-fp16'
