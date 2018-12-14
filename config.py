@@ -66,6 +66,7 @@ sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
 train.total_kimg = 12000
 train.resume_run_id = result_dir + '/003-pgan-isbi_512-preset-v2-2gpus-fp16'
 train.resume_kimg = 3749
+train.network_snapshot_ticks = 4
 
 # Numerical precision for faster training
 desc += '-fp16'
