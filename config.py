@@ -19,7 +19,7 @@ class EasyDict(dict):
 # Paths.
 
 data_dir = 'tfrecords'
-result_dir = 'pggan_results_2'
+result_dir = 'pggan_results_1'
 
 #----------------------------------------------------------------------------
 # TensorFlow options.
@@ -68,8 +68,8 @@ tick_kimg_dict = {}
 sched.lod_training_kimg = 16
 sched.lod_transition_kimg = 16
 train.total_kimg = 240
-train.image_snapshot_ticks = 10
-train.network_snapshot_ticks = 100
+train.image_snapshot_ticks = 1
+train.network_snapshot_ticks = 5
 #train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
 #train.resume_kimg = 4469
 #train.network_snapshot_ticks = 4
