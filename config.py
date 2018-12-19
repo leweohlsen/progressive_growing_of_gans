@@ -71,6 +71,7 @@ sched.lod_transition_kimg = 10
 train.image_snapshot_ticks = 10
 train.network_snapshot_ticks = 20
 
+
 #train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
 #train.resume_kimg = 4469
 #train.network_snapshot_ticks = 4
