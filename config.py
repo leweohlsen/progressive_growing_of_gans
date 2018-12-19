@@ -19,7 +19,7 @@ class EasyDict(dict):
 # Paths.
 
 data_dir = 'tfrecords'
-result_dir = 'results'
+result_dir = 'drive/My Drive/pggan_results'
 
 #----------------------------------------------------------------------------
 # TensorFlow options.
@@ -37,7 +37,7 @@ env.TF_CPP_MIN_LOG_LEVEL                        = '1'       # 0 (default) = Prin
 # To run, comment/uncomment the lines as appropriate and launch train.py.
 
 desc        = 'pgan'                                        # Description string included in result subdir name.
-random_seed = 1000                                          # Global random seed.
+random_seed = 42                                            # Global random seed.
 dataset     = EasyDict()                                    # Options for dataset.load_dataset().
 train       = EasyDict(func='train.train_progressive_gan')  # Options for main training func.
 G           = EasyDict(func='networks.G_paper')             # Options for generator network.
@@ -55,20 +55,20 @@ dataset = EasyDict(tfrecord_dir='isbi_512')
 train.mirror_augment = False
 
 # Config presets (choose one).
-desc += '-preset-v2-2gpus'
+desc += '-preset-v2-1gpu'
 num_gpus = 1
 sched.minibatch_base = 4
-sched.minibatch_dict = {4: 128, 8: 128, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8, 512: 4}
-sched.G_lrate_dict = {512: 0.0015, 1024: 0.002}
+sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8, 512: 4}
+sched.G_lrate_dict = {1024: 0.0015}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
 sched.tick_kimg_base = 1
 sched.tick_kimg_dict = {}
 
 # training parameters
-train.total_kimg = 140
-sched.lod_training_kimg = 20
-sched.lod_transition_kimg = 10
-train.image_snapshot_ticks = 10
+train.total_kimg = 2000
+sched.lod_training_kimg = 100
+sched.lod_transition_kimg = 100
+train.image_snapshot_ticks = 5
 train.network_snapshot_ticks = 20
 
 
