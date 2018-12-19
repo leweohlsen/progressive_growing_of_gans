@@ -65,11 +65,12 @@ sched.tick_kimg_base = 1
 sched.tick_kimg_dict = {}
 
 # training parameters
-train.total_kimg = 0.4
+train.total_kimg = 400
 sched.lod_training_kimg = 100
 sched.lod_transition_kimg = 50
 train.image_snapshot_ticks = 10
 train.network_snapshot_ticks = 50
+
 #train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
 #train.resume_kimg = 4469
 #train.network_snapshot_ticks = 4
