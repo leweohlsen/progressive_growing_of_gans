@@ -19,7 +19,7 @@ class EasyDict(dict):
 # Paths.
 
 data_dir = 'tfrecords'
-result_dir = 'pggan_results'
+result_dir = 'pggan_results_2'
 
 #----------------------------------------------------------------------------
 # TensorFlow options.
@@ -29,7 +29,7 @@ env = EasyDict()        # Environment variables, set by the main program in trai
 
 tf_config['graph_options.place_pruned_graph']   = True      # False (default) = Check that all ops are available on the designated device. True = Skip the check for ops that are not used.
 #tf_config['gpu_options.allow_growth']          = False     # False (default) = Allocate all GPU memory at the beginning. True = Allocate only as much GPU memory as needed.
-env.CUDA_VISIBLE_DEVICES                       = '0,1'       # Unspecified (default) = Use all available GPUs. List of ints = CUDA device numbers to use.
+env.CUDA_VISIBLE_DEVICES                       = '2,3'       # Unspecified (default) = Use all available GPUs. List of ints = CUDA device numbers to use.
 env.TF_CPP_MIN_LOG_LEVEL                        = '1'       # 0 (default) = Print all available debug info from TensorFlow. 1 = Print warnings and errors, but disable debug info.
 
 #----------------------------------------------------------------------------
@@ -61,12 +61,18 @@ sched.minibatch_base = 8
 sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8}
 sched.G_lrate_dict = {512: 0.0015, 1024: 0.002}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
+tick_kimg_base = 1
+tick_kimg_dict = {}
 
 # training parameters
-train.total_kimg = 12000
-train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
-train.resume_kimg = 4469
-train.network_snapshot_ticks = 4
+sched.lod_training_kimg = 16
+sched.lod_transition_kimg = 16
+train.total_kimg = 240
+train.image_snapshot_ticks = 10
+train.network_snapshot_ticks = 100
+#train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
+#train.resume_kimg = 4469
+#train.network_snapshot_ticks = 4
 
 # Numerical precision for faster training
 desc += '-fp16'
