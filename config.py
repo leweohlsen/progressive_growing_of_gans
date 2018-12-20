@@ -18,8 +18,8 @@ class EasyDict(dict):
 #----------------------------------------------------------------------------
 # Paths.
 
-data_dir = '../data/isbi_512/tfrecords'
-result_dir = '../results/pggan/'
+data_dir = '/home/minf101062/data/'
+result_dir = '/home/minf101062/results/pggan/'
 
 #----------------------------------------------------------------------------
 # TensorFlow options.
