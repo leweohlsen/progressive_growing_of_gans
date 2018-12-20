@@ -18,8 +18,8 @@ class EasyDict(dict):
 #----------------------------------------------------------------------------
 # Paths.
 
-data_dir = 'tfrecords'
-result_dir = 'drive/My Drive/pggan_results'
+data_dir = '../data/isbi_512/tfrecords'
+result_dir = '../results/pggan/'
 
 #----------------------------------------------------------------------------
 # TensorFlow options.
@@ -29,14 +29,14 @@ env = EasyDict()        # Environment variables, set by the main program in trai
 
 tf_config['graph_options.place_pruned_graph']   = True      # False (default) = Check that all ops are available on the designated device. True = Skip the check for ops that are not used.
 #tf_config['gpu_options.allow_growth']          = False     # False (default) = Allocate all GPU memory at the beginning. True = Allocate only as much GPU memory as needed.
-env.CUDA_VISIBLE_DEVICES                       = '0'       # Unspecified (default) = Use all available GPUs. List of ints = CUDA device numbers to use.
+env.CUDA_VISIBLE_DEVICES                       = '0,1,2,3'       # Unspecified (default) = Use all available GPUs. List of ints = CUDA device numbers to use.
 env.TF_CPP_MIN_LOG_LEVEL                        = '1'       # 0 (default) = Print all available debug info from TensorFlow. 1 = Print warnings and errors, but disable debug info.
 
 #----------------------------------------------------------------------------
 # Official training configs, targeted mainly for CelebA-HQ.
 # To run, comment/uncomment the lines as appropriate and launch train.py.
 
-desc        = 'pgan'                                        # Description string included in result subdir name.
+desc        = 'pggan'                                        # Description string included in result subdir name.
 random_seed = 42                                            # Global random seed.
 dataset     = EasyDict()                                    # Options for dataset.load_dataset().
 train       = EasyDict(func='train.train_progressive_gan')  # Options for main training func.
@@ -54,23 +54,14 @@ desc += '-isbi_512'
 dataset = EasyDict(tfrecord_dir='isbi_512')
 train.mirror_augment = False
 
-# Config presets (choose one).
-desc += '-preset-v2-1gpu'
-num_gpus = 1
-sched.minibatch_base = 4
-sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8, 512: 4}
-sched.G_lrate_dict = {1024: 0.0015}
+# Config.
+desc += '-preset-v2-4gpus'
+num_gpus = 4
+sched.minibatch_base = 16
+sched.minibatch_dict = {4: 512, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16}
+sched.G_lrate_dict = {256: 0.0015, 512: 0.002, 1024: 0.003}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
-sched.tick_kimg_base = 1
-sched.tick_kimg_dict = {}
-
-# training parameters
-train.total_kimg = 6000
-sched.lod_training_kimg = 300
-sched.lod_transition_kimg = 300
-train.image_snapshot_ticks = 10
-train.network_snapshot_ticks = 20
-
+train.total_kimg = 12000
 
 #train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
 #train.resume_kimg = 4469
