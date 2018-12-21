@@ -19,7 +19,7 @@ class EasyDict(dict):
 # Paths.
 
 data_dir = 'tfrecords'
-result_dir = 'drive/My Drive/pggan_results'
+result_dir = 'pggan_results'
 
 #----------------------------------------------------------------------------
 # TensorFlow options.
