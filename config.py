@@ -65,7 +65,7 @@ sched.tick_kimg_base = 1
 sched.tick_kimg_dict = {}
 
 # training parameters
-train.total_kimg = 12012
+train.total_kimg = 12001
 # sched.lod_training_kimg = 300
 # sched.lod_transition_kimg = 300
 # train.image_snapshot_ticks = 10
