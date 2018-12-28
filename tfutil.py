@@ -806,7 +806,7 @@ class Network:
 
         # UP until now we were making a Tensor for model
         out_expr = self._run_cache[key]
-        # Let's make a loss function:
+        # psy is the desired image, out_expr is the model output
         psy_name = str(self.scope + '/etalon')
         psy = tf.placeholder(tf.float16, out_expr[0].shape, name=psy_name)
         # MSE loss for all etalons.
