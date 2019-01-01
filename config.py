@@ -75,11 +75,11 @@ sched.lod_transition_kimg = 300
 train.image_snapshot_ticks = 10
 train.network_snapshot_ticks = 20
 
-# Numerical precision for faster training
-desc += '-fp16'
-G.dtype = 'float16'
-D.dtype = 'float16'
-G.pixelnorm_epsilon=1e-4
-G_opt.use_loss_scaling = True
-D_opt.use_loss_scaling = True
-sched.max_minibatch_per_gpu = {512: 16, 1024: 8}
+# # Numerical precision for faster training
+# desc += '-fp16'
+# G.dtype = 'float16'
+# D.dtype = 'float16'
+# G.pixelnorm_epsilon=1e-4
+# G_opt.use_loss_scaling = True
+# D_opt.use_loss_scaling = True
+# sched.max_minibatch_per_gpu = {512: 16, 1024: 8}
