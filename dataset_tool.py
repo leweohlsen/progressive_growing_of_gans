@@ -595,7 +595,7 @@ def create_celebahq(tfrecord_dir, celeba_dir, delta_dir, num_threads=4, num_task
 
 #----------------------------------------------------------------------------
 
-def create_from_images(tfrecord_dir, image_dir, shuffle):
+def create_from_images(tfrecord_dir, image_dir, shuffle, labels_npy_file):
     print('Loading images from "%s"' % image_dir)
     image_filenames = sorted(glob.glob(os.path.join(image_dir, '*')))
     if len(image_filenames) == 0:
@@ -620,6 +620,9 @@ def create_from_images(tfrecord_dir, image_dir, shuffle):
             else:
                 img = img.transpose(2, 0, 1) # HWC => CHW
             tfr.add_image(img)
+
+        if os.path.isfile(labels_npy_file):
+            tfr.add_labels(np.load(labels_npy_file))
 
 #----------------------------------------------------------------------------
 
@@ -719,7 +722,8 @@ def execute_cmdline(argv):
                                             'create_from_images datasets/mydataset myimagedir')
     p.add_argument(     'tfrecord_dir',     help='New dataset directory to be created')
     p.add_argument(     'image_dir',        help='Directory containing the images')
-    p.add_argument(     '--shuffle',        help='Randomize image order (default: 1)', type=int, default=1)
+    p.add_argument(     'labels_npy_file',  help='Numpy file with the labels')
+    p.add_argument(     '--shuffle',        help='Randomize image order (default: 1)', type=int, default=0)
 
     p = add_command(    'create_from_hdf5', 'Create dataset from legacy HDF5 archive.',
                                             'create_from_hdf5 datasets/celebahq ~/downloads/celeba-hq-1024x1024.h5')

@@ -808,7 +808,7 @@ class Network:
         out_expr = self._run_cache[key]
         # psy is the desired image, out_expr is the model output
         psy_name = str(self.scope + '/etalon')
-        psy = tf.placeholder(tf.float16, out_expr[0].shape, name=psy_name)
+        psy = tf.placeholder(tf.float32, out_expr[0].shape, name=psy_name)
         # MSE loss for all etalons.
         loss = tf.reduce_sum(tf.pow(out_expr[0] - psy, 2))
         latents_name = self.input_templates[0].name

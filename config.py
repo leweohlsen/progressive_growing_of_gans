@@ -54,6 +54,10 @@ desc += '-isbi_512'
 dataset = EasyDict(tfrecord_dir='isbi_512')
 train.mirror_augment = False
 
+# Conditioned on full label
+desc += '-cond'
+dataset.max_label_size = 'full' 
+
 # Config presets (choose one).
 desc += '-preset-v2-1gpu'
 num_gpus = 1
@@ -65,15 +69,11 @@ sched.tick_kimg_base = 1
 sched.tick_kimg_dict = {}
 
 # training parameters
-train.total_kimg = 12001
-# sched.lod_training_kimg = 300
-# sched.lod_transition_kimg = 300
-# train.image_snapshot_ticks = 10
-# train.network_snapshot_ticks = 20
-
-
-train.resume_run_id = result_dir + '/000-pggan-isbi_512-preset-v2-4gpus-fp16'
-train.resume_kimg = 12000
+train.total_kimg = 6000
+sched.lod_training_kimg = 300
+sched.lod_transition_kimg = 300
+train.image_snapshot_ticks = 10
+train.network_snapshot_ticks = 20
 
 # Numerical precision for faster training
 desc += '-fp16'
