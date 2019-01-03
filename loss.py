@@ -19,6 +19,10 @@ def fp32(*values):
     values = tuple(tf.cast(v, tf.float32) for v in values)
     return values if len(values) >= 2 else values[0]
 
+def label_penalty(labels, logits):
+    logits_sigmoid = tf.nn.sigmoid(logits)
+    return tf.losses.mean_squared_error(labels, logits_sigmoid)
+
 #----------------------------------------------------------------------------
 # Generator loss function used in the paper (WGAN + AC-GAN).
 
@@ -33,7 +37,7 @@ def G_wgan_acgan(G, D, opt, training_set, minibatch_size,
 
     if D.output_shapes[1][1] > 0:
         with tf.name_scope('LabelPenalty'):
-            label_penalty_fakes = tf.nn.softmax_cross_entropy_with_logits_v2(labels=labels, logits=fake_labels_out)
+            label_penalty_fakes = label_penalty(labels, fake_labels_out)
         loss += label_penalty_fakes * cond_weight
     return loss
 
@@ -72,8 +76,8 @@ def D_wgangp_acgan(G, D, opt, training_set, minibatch_size, reals, labels,
 
     if D.output_shapes[1][1] > 0:
         with tf.name_scope('LabelPenalty'):
-            label_penalty_reals = tf.nn.softmax_cross_entropy_with_logits_v2(labels=labels, logits=real_labels_out)
-            label_penalty_fakes = tf.nn.softmax_cross_entropy_with_logits_v2(labels=labels, logits=fake_labels_out)
+            label_penalty_reals = label_penalty(labels, real_labels_out)
+            label_penalty_fakes = label_penalty(labels, fake_labels_out)
             label_penalty_reals = tfutil.autosummary('Loss/label_penalty_reals', label_penalty_reals)
             label_penalty_fakes = tfutil.autosummary('Loss/label_penalty_fakes', label_penalty_fakes)
         loss += (label_penalty_reals + label_penalty_fakes) * cond_weight
