@@ -67,7 +67,6 @@ sched.G_lrate_dict = {1024: 0.0015}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
 sched.tick_kimg_base = 1
 sched.tick_kimg_dict = {}
-sched.lod_initial_resolution = 32
 
 # training parameters
 train.total_kimg = 6000
