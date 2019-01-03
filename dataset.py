@@ -154,7 +154,11 @@ class TFRecordDataset:
     # Get random labels as TensorFlow expression.
     def get_random_labels_tf(self, minibatch_size): # => labels
         if self.label_size > 0:
-            return tf.gather(self._tf_labels_var, tf.random_uniform([minibatch_size], 0, self._np_labels.shape[0], dtype=tf.int32))
+            a = tf.gather(self._tf_labels_var, tf.random_uniform([minibatch_size], 0, self._np_labels.shape[0], dtype=tf.int32))
+            b = tf.gather(self._tf_labels_var, tf.random_uniform([minibatch_size], 0, self._np_labels.shape[0], dtype=tf.int32))
+            ab = tf.subtract(b, a)
+            delta = tf.random_uniform((), minval=0, maxval=1)
+            return tf.add(a, tf.multiply(ab, delta))
         else:
             return tf.zeros([minibatch_size, 0], self.label_dtype)
 

@@ -54,6 +54,9 @@ desc += '-isbi_512'
 dataset = EasyDict(tfrecord_dir='isbi_512')
 train.mirror_augment = False
 
+desc += '-cond'
+dataset.max_label_size = 'full'
+
 # Config.
 desc += '-preset-v2-4gpus'
 num_gpus = 4
@@ -63,6 +66,10 @@ sched.G_lrate_dict = {256: 0.0015, 512: 0.002, 1024: 0.003}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
 train.total_kimg = 12000
 
+# training parameters
+train.total_kimg = 8000
+sched.lod_training_kimg = 400
+sched.lod_transition_kimg = 400
 #train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
 #train.resume_kimg = 4469
 #train.network_snapshot_ticks = 4
