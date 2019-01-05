@@ -69,11 +69,11 @@ sched.tick_kimg_base = 1
 sched.tick_kimg_dict = {}
 
 # training parameters
-train.total_kimg = 6000
-sched.lod_training_kimg = 300
-sched.lod_transition_kimg = 300
-train.image_snapshot_ticks = 10
-train.network_snapshot_ticks = 20
+train.total_kimg = 12000
+sched.lod_training_kimg = 600
+sched.lod_transition_kimg = 600
+train.image_snapshot_ticks = 20
+train.network_snapshot_ticks = 40
 
 # Numerical precision for faster training
 desc += '-fp16'
