@@ -19,15 +19,11 @@ def fp32(*values):
     values = tuple(tf.cast(v, tf.float32) for v in values)
     return values if len(values) >= 2 else values[0]
 
-def label_penalty(labels, logits):
-    logits_sigmoid = tf.nn.sigmoid(logits)
-    return tf.losses.mean_squared_error(labels, logits_sigmoid)
-
 #----------------------------------------------------------------------------
 # Generator loss function used in the paper (WGAN + AC-GAN).
 
 def G_wgan_acgan(G, D, opt, training_set, minibatch_size,
-    cond_weight = 1000.0): # Weight of the conditioning term.
+    cond_weight = 1.0): # Weight of the conditioning term.
 
     latents = tf.random_normal([minibatch_size] + G.input_shapes[0][1:])
     labels = training_set.get_random_labels_tf(minibatch_size)
@@ -37,7 +33,7 @@ def G_wgan_acgan(G, D, opt, training_set, minibatch_size,
 
     if D.output_shapes[1][1] > 0:
         with tf.name_scope('LabelPenalty'):
-            label_penalty_fakes = label_penalty(labels, fake_labels_out)
+            label_penalty_fakes = tf.nn.softmax_cross_entropy_with_logits_v2(labels=labels, logits=fake_labels_out)
         loss += label_penalty_fakes * cond_weight
     return loss
 
@@ -48,7 +44,7 @@ def D_wgangp_acgan(G, D, opt, training_set, minibatch_size, reals, labels,
     wgan_lambda     = 10.0,     # Weight for the gradient penalty term.
     wgan_epsilon    = 0.001,    # Weight for the epsilon term, \epsilon_{drift}.
     wgan_target     = 1.0,      # Target value for gradient magnitudes.
-    cond_weight     = 1000.0):     # Weight of the conditioning terms.
+    cond_weight     = 1.0):     # Weight of the conditioning terms.
 
     latents = tf.random_normal([minibatch_size] + G.input_shapes[0][1:])
     fake_images_out = G.get_output_for(latents, labels, is_training=True)
@@ -76,8 +72,8 @@ def D_wgangp_acgan(G, D, opt, training_set, minibatch_size, reals, labels,
 
     if D.output_shapes[1][1] > 0:
         with tf.name_scope('LabelPenalty'):
-            label_penalty_reals = label_penalty(labels, real_labels_out)
-            label_penalty_fakes = label_penalty(labels, fake_labels_out)
+            label_penalty_reals = tf.nn.softmax_cross_entropy_with_logits_v2(labels=labels, logits=real_labels_out)
+            label_penalty_fakes = tf.nn.softmax_cross_entropy_with_logits_v2(labels=labels, logits=fake_labels_out)
             label_penalty_reals = tfutil.autosummary('Loss/label_penalty_reals', label_penalty_reals)
             label_penalty_fakes = tfutil.autosummary('Loss/label_penalty_fakes', label_penalty_fakes)
         loss += (label_penalty_reals + label_penalty_fakes) * cond_weight
