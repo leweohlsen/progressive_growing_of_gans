@@ -74,6 +74,11 @@ def D_wgangp_acgan(G, D, opt, training_set, minibatch_size, reals, labels,
         epsilon_penalty = tfutil.autosummary('Loss/epsilon_penalty', tf.square(real_scores_out))
     loss += epsilon_penalty * wgan_epsilon
 
+    with tf.name_scope('L1Penalty'):
+        l1_penalty = tf.losses.absolute_difference(reals, fake_images_out)
+        l1_penalty = tfutil.autosummary('Loss/l1_penalty', l1_penalty)
+    loss += l1_penalty
+
     if D.output_shapes[1][1] > 0:
         with tf.name_scope('LabelPenalty'):
             label_penalty_reals = label_penalty(labels, real_labels_out)
