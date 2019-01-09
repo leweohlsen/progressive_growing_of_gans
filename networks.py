@@ -170,7 +170,9 @@ def G_paper(
     if structure is None: structure = 'linear' if is_template_graph else 'recursive'
     act = leaky_relu if use_leakyrelu else tf.nn.relu
     
+    latents_in.set_shape([None, latent_size])
     labels_in.set_shape([None, label_size])
+    combo_in = tf.cast(labels_in, dtype)
     lod_in = tf.cast(tf.get_variable('lod', initializer=np.float32(0.0), trainable=False), dtype)
 
     # Building blocks.
@@ -202,7 +204,7 @@ def G_paper(
 
     # Linear structure: simple but inefficient.
     if structure == 'linear':
-        x = block(labels_in, 2)
+        x = block(combo_in, 2)
         images_out = torgb(x, 2)
         for res in range(3, resolution_log2 + 1):
             lod = resolution_log2 - res
@@ -220,7 +222,7 @@ def G_paper(
             if res > 2: img = cset(img, (lod_in > lod), lambda: upscale2d(lerp(torgb(y, res), upscale2d(torgb(x, res - 1)), lod_in - lod), 2**lod))
             if lod > 0: img = cset(img, (lod_in < lod), lambda: grow(y, res + 1, lod - 1))
             return img()
-        images_out = grow(labels_in, 2, resolution_log2 - 2)
+        images_out = grow(combo_in, 2, resolution_log2 - 2)
         
     assert images_out.dtype == tf.as_dtype(dtype)
     images_out = tf.identity(images_out, name='images_out')
