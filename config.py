@@ -67,13 +67,6 @@ sched.G_lrate_dict = {512: 0.0015, 1024: 0.002}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
 train.total_kimg = 12000
 
-# training parameters
-train.total_kimg = 12000
-sched.lod_training_kimg = 600
-sched.lod_transition_kimg = 600
-train.image_snapshot_ticks = 20
-train.network_snapshot_ticks = 40
-
 # Numerical precision for faster training
 desc += '-fp16'
 G.dtype = 'float16'
