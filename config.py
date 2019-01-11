@@ -30,7 +30,7 @@ env = EasyDict()        # Environment variables, set by the main program in trai
 tf_config['graph_options.place_pruned_graph']   = True      # False (default) = Check that all ops are available on the designated device. True = Skip the check for ops that are not used.
 #tf_config['gpu_options.allow_growth']          = False     # False (default) = Allocate all GPU memory at the beginning. True = Allocate only as much GPU memory as needed.
 env.CUDA_VISIBLE_DEVICES                       = '0'       # Unspecified (default) = Use all available GPUs. List of ints = CUDA device numbers to use.
-env.TF_CPP_MIN_LOG_LEVEL                        = '0'       # 0 (default) = Print all available debug info from TensorFlow. 1 = Print warnings and errors, but disable debug info.
+env.TF_CPP_MIN_LOG_LEVEL                        = '0,1'       # 0 (default) = Print all available debug info from TensorFlow. 1 = Print warnings and errors, but disable debug info.
 
 #----------------------------------------------------------------------------
 # Official training configs, targeted mainly for CelebA-HQ.
@@ -50,8 +50,8 @@ sched       = EasyDict()                                    # Options for train.
 grid        = EasyDict(size='1080p', layout='row_per_class')       # Options for train.setup_snapshot_image_grid().
 
 # Dataset (choose one).
-desc += '-isbi_512'
-dataset = EasyDict(tfrecord_dir='isbi_512')
+desc += '-ceph_512'
+dataset = EasyDict(tfrecord_dir='ceph_512')
 train.mirror_augment = False
 
 # Conditioned on full label
@@ -59,14 +59,13 @@ desc += '-cond'
 dataset.max_label_size = 'full' 
 
 # Config presets (choose one).
-desc += '-preset-v2-1gpu'
-num_gpus = 1
-sched.minibatch_base = 2
-sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8, 512: 4}
-sched.G_lrate_dict = {1024: 0.0015}
+desc += '-preset-v2-2gpus'
+num_gpus = 2
+sched.minibatch_base = 8
+sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8}
+sched.G_lrate_dict = {512: 0.0015, 1024: 0.002}
 sched.D_lrate_dict = EasyDict(sched.G_lrate_dict)
-sched.tick_kimg_base = 1
-sched.tick_kimg_dict = {}
+train.total_kimg = 12000
 
 # training parameters
 train.total_kimg = 12000
