@@ -18,7 +18,7 @@ class EasyDict(dict):
 #----------------------------------------------------------------------------
 # Paths.
 
-data_dir = '../../data/tfrecords'
+data_dir = '../../datasets/tfrecords'
 result_dir = '../../results/pggan_results'
 
 #----------------------------------------------------------------------------
