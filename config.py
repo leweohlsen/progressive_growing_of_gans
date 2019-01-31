@@ -73,6 +73,8 @@ train.network_snapshot_ticks = 5
 #train.resume_run_id = result_dir + '/004-pgan-isbi_512-preset-v2-2gpus-fp16'
 #train.resume_kimg = 4469
 #train.network_snapshot_ticks = 4
+train.resume_run_id = result_dir + '/007-pgan-ceph_512-cond-preset-v2-2gpus-fp16'
+train.resume_kimg = 6009
 
 # Numerical precision for faster training
 desc += '-fp16'
